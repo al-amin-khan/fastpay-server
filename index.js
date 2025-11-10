@@ -50,7 +50,14 @@ const run = async () => {
             const result = await cursor.toArray();
             res.send(result);
         });
-        
+
+        app.get("/bills/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await billsCollection.findOne(query);
+            res.send(result);
+        });
+
     } catch (err) {
         console.error("MongoDB connection error:", err);
         process.exit(1);
