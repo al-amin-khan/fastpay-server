@@ -37,6 +37,12 @@ const run = async () => {
 
         //all bills api
         app.get("/bills", async (req, res) => {
+            const query = req.query.category;
+            if (query) {
+                const cursor = billsCollection.find({ category: query });
+                const result = await cursor.toArray();
+                return res.send(result);
+            }
             const cursor = billsCollection.find();
             const result = await cursor.toArray();
             res.send(result);
