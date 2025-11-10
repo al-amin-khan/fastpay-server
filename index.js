@@ -44,6 +44,13 @@ const run = async () => {
             res.send(result);
         });
 
+        app.get("/latest-bills", async (req, res) => {
+            const projectFields = {title: 1, category: 1, location: 1, date: 1}
+            const cursor = billsCollection.find().sort({ date: -1 }).project(projectFields).limit(6);
+            const result = await cursor.toArray();
+            res.send(result);
+        });
+        
     } catch (err) {
         console.error("MongoDB connection error:", err);
         process.exit(1);
