@@ -37,7 +37,13 @@ const run = async () => {
             "Pinged your deployment. You successfully connected to MongoDB!"
         );
 
-        
+        //all bills api
+        app.get("/bills", async (req, res) => {
+            const cursor = billsCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        });
+
     } catch (err) {
         console.error("MongoDB connection error:", err);
         process.exit(1);
@@ -47,7 +53,7 @@ const run = async () => {
 run().catch(console.dir);
 
 app.get("/", (req, res) => {
-    res.send("Smart Deal server is running");
+    res.send("FastPay server is running");
 });
 
 app.listen(PORT, () => {
