@@ -80,7 +80,58 @@ const run = async () => {
             res.send(result);
         });
 
+        app.patch("/bills/:id", async (req, res) => {
+            const id = req.params.id;
+            const bill = req.body;
+            console.log(bill);
+            const query = { _id: new ObjectId(id) };
+            const updateDoc = {
+                $set: {
+                    status: bill.title,
+                    date: bill.date,
+                },
+            };
+            const result = await billsCollection.updateOne(query, updateDoc);
+            res.send(result);
+        });
+
+        // my bills api
+        app.get("/my-bills", async (req, res) => {
+            const email = req.query.email;
+            console.log(email);
+            const query = { email: email };
+            const result = await myBillsCollection.find(query).toArray();
+            res.send(result);
+        });
+
+
+        app.post("/my-bills", async (req, res) => {
+            const bill = req.body;
+            const result = await myBillsCollection.insertOne(bill);
+            res.send(result);
+        })
         
+        app.patch("/my-bills/:id", async (req, res) => {
+            const id = req.params.id;
+            const bill = req.body;
+            console.log(bill);
+            const query = { _id: new ObjectId(id) };
+            const updateDoc = {
+                $set: {
+                    billId: bill.billId,
+                    accountNumber: bill.accountNumber,
+                    amount: bill.amount,
+                    billingMonth: bill.billingMonth,
+                    username: bill.username,
+                    phone: bill.phone,
+                    email: bill.email,
+                    address: bill.address,
+                    updatedAt: bill.date,
+                },
+            };
+            const result = await myBillsCollection.updateOne(query, updateDoc);
+            res.send(result);
+        })
     } catch (err) {
         console.error("MongoDB connection error:", err);
         process.exit(1);
