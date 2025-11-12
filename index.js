@@ -29,10 +29,9 @@ const run = async () => {
         const billsCollection = db.collection("bills");
         const myBillsCollection = db.collection("myBills");
 
-        console.log("Connected to MongoDB");
-        await client.db("admin").command({ ping: 1 });
+        // await client.db("admin").command({ ping: 1 });
         console.log(
-            "Pinged your deployment. You successfully connected to MongoDB!"
+            "You successfully connected to MongoDB!"
         );
 
         //all bills api
@@ -83,7 +82,6 @@ const run = async () => {
         app.patch("/bills/:id", async (req, res) => {
             const id = req.params.id;
             const bill = req.body;
-            console.log(bill);
             const query = { _id: new ObjectId(id) };
             const updateDoc = {
                 $set: {
@@ -98,7 +96,6 @@ const run = async () => {
         // my bills api
         app.get("/my-bills", async (req, res) => {
             const email = req.query.email;
-            console.log(email);
             const query = { email: email };
             const result = await myBillsCollection.find(query).toArray();
             res.send(result);
@@ -114,7 +111,6 @@ const run = async () => {
         app.patch("/my-bills/:id", async (req, res) => {
             const id = req.params.id;
             const bill = req.body;
-            console.log(bill);
             const query = { _id: new ObjectId(id) };
             const updateDoc = {
                 $set: {
@@ -132,6 +128,14 @@ const run = async () => {
             const result = await myBillsCollection.updateOne(query, updateDoc);
             res.send(result);
         })
+
+        app.delete("/my-bills/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await myBillsCollection.deleteOne(query);
+            res.send(result);
+        })
+
     } catch (err) {
         console.error("MongoDB connection error:", err);
         process.exit(1);
