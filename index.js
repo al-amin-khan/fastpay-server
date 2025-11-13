@@ -36,9 +36,15 @@ const run = async () => {
 
         //all bills api
         app.get("/bills", async (req, res) => {
-            const query = req.query.category;
-            if (query) {
-                const cursor = billsCollection.find({ category: query });
+            const queryParam = req.query.category;
+            if (queryParam) {
+                const normalizedCategory = String(queryParam).trim();
+                const cursor = billsCollection.find({
+                    category: {
+                        $regex: `^${normalizedCategory}$`,
+                        $options: "i",
+                    },
+                });
                 const result = await cursor.toArray();
                 return res.send(result);
             }
@@ -48,12 +54,34 @@ const run = async () => {
         });
 
         app.get("/bills/category", async (req, res) => {
-            const data = await billsCollection.distinct("category");
-            const categories = [
-                ...new Set(data.map((c) => String(c).trim().toLowerCase())),
-            ].sort();
+            try {
+                const data = await billsCollection.distinct("category");
+                const normalized = data.reduce((acc, raw) => {
+                    if (raw === null || raw === undefined) {
+                        return acc;
+                    }
+                    const trimmed = String(raw).trim();
+                    if (!trimmed) {
+                        return acc;
+                    }
+                    const key = trimmed.toLowerCase();
+                    if (!acc.has(key)) {
+                        acc.set(key, trimmed);
+                    }
+                    return acc;
+                }, new Map());
 
-            return res.json({ categories });
+                const categories = Array.from(normalized.values()).sort((a, b) =>
+                    a.localeCompare(b)
+                );
+
+                return res.json({ categories });
+            } catch (error) {
+                console.error("Failed to load categories:", error);
+                return res
+                    .status(500)
+                    .json({ message: "Unable to load categories" });
+            }
         });
 
         app.get("/latest-bills", async (req, res) => {
@@ -138,7 +166,6 @@ const run = async () => {
 
     } catch (err) {
         console.error("MongoDB connection error:", err);
-        // process.exit(1);
     }
 };
 
