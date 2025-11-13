@@ -20,11 +20,6 @@ const client = new MongoClient(uri, {
         strict: false,
         deprecationErrors: true,
     },
-    maxPoolSize: 10,
-    minPoolSize: 1,
-    maxIdleTimeMS: 60000,
-    serverSelectionTimeoutMS: 10000,
-    socketTimeoutMS: 45000,
 });
 
 const run = async () => {
