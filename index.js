@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 
 const allowedOrigins = [
     "http://localhost:5173",
-    "https://fastpay-bd.web.app/" 
+    "https://fastpay-bd.web.app" 
 ];
 
 const corsOptions = {
