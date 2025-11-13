@@ -35,21 +35,22 @@ const run = async () => {
         //all bills api
         app.get("/bills", async (req, res) => {
             const queryParam = req.query.category;
-            const filter = {};
-            console.log({queryParam});
-            if (category && category.toLowerCase() !== "all") {
+            console.log({ queryParam });
+
+            if (queryParam && queryParam.toLowerCase() !== "all") {
                 const normalizedCategory = String(queryParam).trim();
-                const cursor = billsCollection.find({
-                    category: {
-                        $regex: `^${normalizedCategory}$`,
-                        $options: "i",
-                    },
-                });
-                const result = await billsCollection.find(filter).toArray();
+                const result = await billsCollection
+                    .find({
+                        category: {
+                            $regex: `^${normalizedCategory}$`,
+                            $options: "i",
+                        },
+                    })
+                    .toArray();
                 return res.send(result);
             }
-            const cursor = billsCollection.find();
-            const result = await cursor.toArray();
+
+            const result = await billsCollection.find().toArray();
             res.send(result);
         });
 
