@@ -20,6 +20,11 @@ const client = new MongoClient(uri, {
         strict: false,
         deprecationErrors: true,
     },
+    maxPoolSize: 10,
+    minPoolSize: 1,
+    maxIdleTimeMS: 60000,
+    serverSelectionTimeoutMS: 10000,
+    socketTimeoutMS: 45000,
 });
 
 const run = async () => {
@@ -30,9 +35,7 @@ const run = async () => {
         const myBillsCollection = db.collection("myBills");
 
         // await client.db("admin").command({ ping: 1 });
-        console.log(
-            "You successfully connected to MongoDB!"
-        );
+        console.log("You successfully connected to MongoDB!");
 
         //all bills api
         app.get("/bills", async (req, res) => {
@@ -71,8 +74,8 @@ const run = async () => {
                     return acc;
                 }, new Map());
 
-                const categories = Array.from(normalized.values()).sort((a, b) =>
-                    a.localeCompare(b)
+                const categories = Array.from(normalized.values()).sort(
+                    (a, b) => a.localeCompare(b)
                 );
 
                 return res.json({ categories });
@@ -129,13 +132,12 @@ const run = async () => {
             res.send(result);
         });
 
-
         app.post("/my-bills", async (req, res) => {
             const bill = req.body;
             const result = await myBillsCollection.insertOne(bill);
             res.send(result);
-        })
-        
+        });
+
         app.patch("/my-bills/:id", async (req, res) => {
             const id = req.params.id;
             const bill = req.body;
@@ -155,15 +157,14 @@ const run = async () => {
             };
             const result = await myBillsCollection.updateOne(query, updateDoc);
             res.send(result);
-        })
+        });
 
         app.delete("/my-bills/:id", async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await myBillsCollection.deleteOne(query);
             res.send(result);
-        })
-
+        });
     } catch (err) {
         console.error("MongoDB connection error:", err);
     }
