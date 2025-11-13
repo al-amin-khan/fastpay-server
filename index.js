@@ -113,7 +113,7 @@ const run = async () => {
             const query = { _id: new ObjectId(id) };
             const updateDoc = {
                 $set: {
-                    status: bill.title,
+                    status: bill.status,
                     date: bill.date,
                 },
             };
