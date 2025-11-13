@@ -6,7 +6,18 @@ require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+const allowedOrigins = [
+    "http://localhost:5173",
+    "https://fastpay-server-api.onrender.com",
+    "https://fastpay-server-api.vercel.app/" 
+];
+
+const corsOptions = {
+    origin: allowedOrigins
+};
+
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 const username = process.env.mongodb_user;
