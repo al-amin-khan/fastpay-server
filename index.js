@@ -35,7 +35,6 @@ const run = async () => {
         //all bills api
         app.get("/bills", async (req, res) => {
             const queryParam = req.query.category;
-            console.log({ queryParam });
 
             if (queryParam && queryParam.toLowerCase() !== "all") {
                 const normalizedCategory = String(queryParam).trim();
