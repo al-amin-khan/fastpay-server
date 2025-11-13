@@ -35,7 +35,9 @@ const run = async () => {
         //all bills api
         app.get("/bills", async (req, res) => {
             const queryParam = req.query.category;
-            if (queryParam) {
+            const filter = {};
+            console.log({queryParam});
+            if (category && category.toLowerCase() !== "all") {
                 const normalizedCategory = String(queryParam).trim();
                 const cursor = billsCollection.find({
                     category: {
@@ -43,7 +45,7 @@ const run = async () => {
                         $options: "i",
                     },
                 });
-                const result = await cursor.toArray();
+                const result = await billsCollection.find(filter).toArray();
                 return res.send(result);
             }
             const cursor = billsCollection.find();
