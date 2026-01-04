@@ -1,11 +1,7 @@
 const { MongoClient, ServerApiVersion } = require("mongodb");
 require("dotenv").config();
 
-const username = process.env.mongodb_user;
-const password = process.env.mongodb_password;
-const appName = process.env.appName;
-
-const uri = `mongodb+srv://${username}:${password}@fastpay-aws-mumbai-clus.ktdeaau.mongodb.net/?appName=${appName}`;
+const uri = process.env.MONGO_URI;
 
 const client = new MongoClient(uri, {
     serverApi: {
