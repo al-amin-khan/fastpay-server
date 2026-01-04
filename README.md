@@ -4,8 +4,7 @@ Node/Express API for the FastPay billing platform. It exposes bill catalog data,
 
 ## Live API
 
-- Render deployment: <https://fastpay-server-api.onrender.com/l>
-- Base URL: `https://fastpay-server-api.onrender.com`
+##### URL: [https://fastpay-server-api.vercel.app/]()
 
 ## Features
 
@@ -60,18 +59,18 @@ Express starts on `http://localhost:<PORT>` and immediately connects to MongoDB.
 
 All responses are JSON. Unless noted, endpoints return HTTP `200` with either documents or the result object from MongoDB.
 
-| Method | Path | Description | Notes |
-| --- | --- | --- | --- |
-| GET | `/` | Health check | Returns `"FastPay server is running"`. |
-| GET | `/bills?category=<name>` | List all bills or filter by category | `category` is case-insensitive; omit or pass `all` to fetch everything. |
-| GET | `/bills/category` | Distinct list of bill categories | Returns `{ "categories": ["Electricity", ...] }`. |
-| GET | `/latest-bills` | Six most recent bills | Sorted by `date` descending, limited to projection of `title`, `category`, `location`, `date`. |
-| GET | `/bills/:id` | Fetch a single bill by Mongo `ObjectId` | Returns the bill document or `null` if not found. |
-| PATCH | `/bills/:id` | Update bill status/date | Body supports `{ "status": "Paid", "date": "2024-06-01" }`. |
-| GET | `/my-bills?email=<email>` | Get user-specific bills | Exact email match on `myBills` collection. |
-| POST | `/my-bills` | Create a user bill record | Provide `billId`, `accountNumber`, `amount`, `billingMonth`, `username`, `phone`, `email`, `address`, `date`. |
-| PATCH | `/my-bills/:id` | Update a user bill record | Same payload as POST, plus `updatedAt` is set from `date`. |
-| DELETE | `/my-bills/:id` | Remove a user bill record | Returns `{ "deletedCount": 1 }` when successful. |
+| Method | Path                        | Description                               | Notes                                                                                                                           |
+| ------ | --------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| GET    | `/`                       | Health check                              | Returns `"FastPay server is running"`.                                                                                        |
+| GET    | `/bills?category=<name>`  | List all bills or filter by category      | `category` is case-insensitive; omit or pass `all` to fetch everything.                                                     |
+| GET    | `/bills/category`         | Distinct list of bill categories          | Returns `{ "categories": ["Electricity", ...] }`.                                                                             |
+| GET    | `/latest-bills`           | Six most recent bills                     | Sorted by `date` descending, limited to projection of `title`, `category`, `location`, `date`.                        |
+| GET    | `/bills/:id`              | Fetch a single bill by Mongo `ObjectId` | Returns the bill document or `null` if not found.                                                                             |
+| PATCH  | `/bills/:id`              | Update bill status/date                   | Body supports `{ "status": "Paid", "date": "2024-06-01" }`.                                                                   |
+| GET    | `/my-bills?email=<email>` | Get user-specific bills                   | Exact email match on `myBills` collection.                                                                                    |
+| POST   | `/my-bills`               | Create a user bill record                 | Provide `billId`, `accountNumber`, `amount`, `billingMonth`, `username`, `phone`, `email`, `address`, `date`. |
+| PATCH  | `/my-bills/:id`           | Update a user bill record                 | Same payload as POST, plus `updatedAt` is set from `date`.                                                                  |
+| DELETE | `/my-bills/:id`           | Remove a user bill record                 | Returns `{ "deletedCount": 1 }` when successful.                                                                              |
 
 ### Example Requests
 
@@ -118,4 +117,3 @@ curl -X PATCH https://fastpay-server-api.onrender.com/bills/6655b6c98905ffae5fa3
 - **CORS errors**: Confirm the requesting origin is present in `allowedOrigins`.
 - **Mongo connection failures**: Double-check credentials, IP allow list, and `appName`.
 - **404 on `/bills/:id`**: Validate that the supplied `id` is a valid `ObjectId`.
-
